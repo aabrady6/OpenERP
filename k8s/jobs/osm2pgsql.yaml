@@ -1,0 +1,52 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: osm-import-job
+spec:
+  template:
+    spec:
+      containers:
+        - name: osm2pgsql
+          image: iboates/osm2pgsql:latest
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              echo "Downloading OSM PBF file..."
+              curl -L -o /data/data.pbf https://download.geofabrik.de/north-america/canada/alberta-latest.osm.pbf
+              echo "Download complete. Starting import..."
+              osm2pgsql \
+                -H postgres \
+                -P 5432 \
+                -U "$POSTGRES_USER" \
+                -d "$POSTGRES_DB" \
+                -c \
+                /data/data.pbf
+          env:
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_DB
+          volumeMounts:
+            - name: osm-data
+              mountPath: /data
+      restartPolicy: Never
+      volumes:
+        - name: osm-data
+          emptyDir: {}
+  backoffLimit: 4

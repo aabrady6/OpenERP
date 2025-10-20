@@ -12,6 +12,15 @@ spec:
   selector:
     app: postgres
 ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-initdb-scripts
+data:
+  init-postgis.sql: |
+    CREATE EXTENSION IF NOT EXISTS postgis;
+    CREATE EXTENSION IF NOT EXISTS hstore;
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -21,7 +30,7 @@ spec:
     matchLabels:
       app: postgres
   serviceName: "postgres"
-  replicas: 3
+  replicas: 1
   minReadySeconds: 10
   template:
     metadata:
@@ -31,7 +40,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
         - name: postgres
-          image: postgres:15
+          image: postgis/postgis:18-3.6-alpine
           ports:
             - containerPort: 5432
               name: postgres
@@ -40,8 +49,13 @@ spec:
                 name: postgres-secret
           volumeMounts:
             - name: postgres-data
-              mountPath: /var/lib/postgresql/data
-              subPath: postgres
+              mountPath: /var/lib/postgresql
+            - name: initdb-scripts
+              mountPath: /docker-entrypoint-initdb.d
+      volumes:
+        - name: initdb-scripts
+          configMap:
+            name: postgres-initdb-scripts
   volumeClaimTemplates:
     - metadata:
         name: postgres-data
