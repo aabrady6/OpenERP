@@ -1,0 +1,10 @@
+# Rust/Cargo build files
+/target/
+**/target/
+
+# Generated files
+**/*.rs.bk
+
+# Editor files
+.vscode/
+*.log

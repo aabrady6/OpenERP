@@ -16,14 +16,6 @@
 
    `kind create cluster`
 
-2. Deploy PostgreSQL Stateful Set with persistent storage
+2. Deploy database, load data into database, deploy backend
 
-   `kubectl apply -f k8s/db/`
-
-3. Allow Pods to start.
-
-   `kubectl get pods -w`
-
-4. Run osm2psql Job to import Alberta road data into database
-
-   `kubectl apply -f k8s/jobs/osm2pgsql.yaml`
+   `chmod +x ./deploy.sh && ./deploy.sh`
