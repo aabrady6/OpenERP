@@ -11,7 +11,7 @@ struct Status {
 #[get("/")]
 fn health() -> Json<Status> {
     Json(Status {
-        message: "Backend is running".to_string(),
+        message: "Backend is running. HI!!!!!".to_string(),
     })
 }
 
