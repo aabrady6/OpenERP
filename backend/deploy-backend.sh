@@ -24,13 +24,11 @@ kubectl apply -f "${K8S_DB_DIR}/postgres-secret.yaml"
 kubectl apply -f "${K8S_DB_DIR}/postgres-statefulset.yaml"
 kubectl rollout status statefulset/postgres
 
-
-echo "-- Loading data into Database..."
-kubectl apply -f "${K8S_DB_DIR}/osm2pgsql.yaml"
-echo "⏳ Waiting for data to be loaded.."
-kubectl wait --for=condition=complete job/osm-import-job --timeout=600s
-
-
+echo "skipping import for now..."
+# echo "-- Loading data into Database..."
+# kubectl apply -f "${K8S_DB_DIR}/osm2pgsql.yaml"
+# echo "⏳ Waiting for data to be loaded.."
+# kubectl wait --for=condition=complete job/osm-import-job --timeout=600s
 
 echo "-- Applying backend manifests..."
 kubectl apply -f "${K8S_BACKEND_DIR}/deployment.yaml"
