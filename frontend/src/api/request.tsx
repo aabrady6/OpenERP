@@ -1,7 +1,7 @@
 import { type Request } from '../model/request';
 import { type Response } from '../model/response';
 
-const API_URL = 'http://dummy-url';
+const API_URL = '/api/intersections';
 
 export async function getIntersections(query: Request): Promise<Response> {
   const params = new URLSearchParams({
