@@ -1,10 +1,5 @@
+use crate::models::status::Status;
 use rocket::serde::json::Json;
-use serde::Serialize;
-
-#[derive(Serialize)]
-pub struct Status {
-    message: String,
-}
 
 #[get("/")]
 pub fn health() -> Json<Status> {

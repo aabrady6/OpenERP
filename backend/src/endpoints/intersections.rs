@@ -3,17 +3,8 @@ use sqlx::Pool;
 use sqlx::Postgres;
 
 use crate::models::request::IntersectionRequest;
-
-#[derive(Serialize)]
-pub struct IntersectionResponse {
-    points: Vec<Point>,
-}
-
-#[derive(Serialize)]
-pub struct Point {
-    lat: f64,
-    lon: f64,
-}
+use crate::models::request::Point;
+use crate::models::response::IntersectionResponse;
 
 #[get("/items/search?<lat>&<lon>&<radius>")]
 pub async fn get_intersections(lat: f64, lon: f64, radius: f64) -> Json<IntersectionResponse> {
